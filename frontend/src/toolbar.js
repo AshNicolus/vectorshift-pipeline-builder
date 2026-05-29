@@ -2,21 +2,49 @@
 
 import { DraggableNode } from './draggableNode';
 
-export const PipelineToolbar = () => {
+// Grouped so related nodes sit together in the palette.
+const GROUPS = [
+  {
+    title: 'General',
+    nodes: [
+      { type: 'customInput', label: 'Input', accent: '#10b981' },
+      { type: 'customOutput', label: 'Output', accent: '#f43f5e' },
+      { type: 'text', label: 'Text', accent: '#0ea5e9' },
+      { type: 'note', label: 'Note', accent: '#a3a3a3' },
+    ],
+  },
+  {
+    title: 'AI & Logic',
+    nodes: [
+      { type: 'llm', label: 'LLM', accent: '#8b5cf6' },
+      { type: 'math', label: 'Math', accent: '#f59e0b' },
+      { type: 'filter', label: 'Filter', accent: '#14b8a6' },
+      { type: 'conditional', label: 'Conditional', accent: '#ec4899' },
+      { type: 'api', label: 'API Request', accent: '#3b82f6' },
+    ],
+  },
+];
 
-    return (
-        <div style={{ padding: '10px' }}>
-            <div style={{ marginTop: '20px', display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
-                <DraggableNode type='customInput' label='Input' />
-                <DraggableNode type='llm' label='LLM' />
-                <DraggableNode type='customOutput' label='Output' />
-                <DraggableNode type='text' label='Text' />
-                <DraggableNode type='math' label='Math' />
-                <DraggableNode type='filter' label='Filter' />
-                <DraggableNode type='conditional' label='Conditional' />
-                <DraggableNode type='api' label='API Request' />
-                <DraggableNode type='note' label='Note' />
+export const PipelineToolbar = () => {
+  return (
+    <div className="vs-toolbar">
+      <div className="vs-toolbar__brand">
+        <span className="vs-toolbar__logo">◆</span>
+        <span>VectorShift</span>
+        <span className="vs-toolbar__sub">Pipeline Builder</span>
+      </div>
+      <div className="vs-toolbar__groups">
+        {GROUPS.map((group) => (
+          <div className="vs-toolbar__group" key={group.title}>
+            <span className="vs-toolbar__group-title">{group.title}</span>
+            <div className="vs-toolbar__nodes">
+              {group.nodes.map((node) => (
+                <DraggableNode key={node.type} {...node} />
+              ))}
             </div>
-        </div>
-    );
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 };
