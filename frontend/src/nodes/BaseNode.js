@@ -61,6 +61,7 @@ export const BaseNode = ({
   style,
 }) => {
   const updateNodeField = useStore((state) => state.updateNodeField);
+  const removeNode = useStore((state) => state.removeNode);
 
   // Resolve the current value for a field: persisted data wins, then the
   // field's default (which may be a function of the node id), then ''.
@@ -94,6 +95,14 @@ export const BaseNode = ({
       <div className="vs-node__header" style={{ borderTopColor: accent }}>
         <span className="vs-node__dot" style={{ background: accent }} />
         <span className="vs-node__title">{title}</span>
+        <button
+          type="button"
+          className="vs-node__delete nodrag"
+          title="Delete node"
+          onClick={() => removeNode(id)}
+        >
+          ×
+        </button>
       </div>
 
       <div className="vs-node__body">

@@ -168,6 +168,29 @@ code {
   font-size: 13px;
 }
 
+.vs-node__delete {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--vs-muted);
+  font-size: 17px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+
+.vs-node__delete:hover {
+  background: rgba(244, 63, 94, 0.12);
+  color: #f43f5e;
+}
+
 .vs-node__body {
   padding: 12px;
   display: flex;

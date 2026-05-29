@@ -40,6 +40,7 @@ const selector = (state) => ({
   onNodesChange: state.onNodesChange,
   onEdgesChange: state.onEdgesChange,
   onConnect: state.onConnect,
+  onEdgeUpdate: state.onEdgeUpdate,
 });
 
 export const PipelineUI = () => {
@@ -52,8 +53,29 @@ export const PipelineUI = () => {
       addNode,
       onNodesChange,
       onEdgesChange,
-      onConnect
+      onConnect,
+      onEdgeUpdate
     } = useStore(selector, shallow);
+
+    // Track whether an edge drag landed on a valid handle. If it didn't
+    // (dropped in empty space), we treat it as "delete this connection".
+    const edgeUpdateSuccessful = useRef(true);
+
+    const onEdgeUpdateStart = useCallback(() => {
+      edgeUpdateSuccessful.current = false;
+    }, []);
+
+    const handleEdgeUpdate = useCallback((oldEdge, newConnection) => {
+      edgeUpdateSuccessful.current = true;
+      onEdgeUpdate(oldEdge, newConnection);
+    }, [onEdgeUpdate]);
+
+    const onEdgeUpdateEnd = useCallback((_, edge) => {
+      if (!edgeUpdateSuccessful.current) {
+        onEdgesChange([{ id: edge.id, type: 'remove' }]);
+      }
+      edgeUpdateSuccessful.current = true;
+    }, [onEdgesChange]);
 
     const getInitNodeData = (nodeID, type) => {
       let nodeData = { id: nodeID, nodeType: `${type}` };
@@ -106,6 +128,9 @@ export const PipelineUI = () => {
                 onNodesChange={onNodesChange}
                 onEdgesChange={onEdgesChange}
                 onConnect={onConnect}
+                onEdgeUpdate={handleEdgeUpdate}
+                onEdgeUpdateStart={onEdgeUpdateStart}
+                onEdgeUpdateEnd={onEdgeUpdateEnd}
                 onDrop={onDrop}
                 onDragOver={onDragOver}
                 onInit={setReactFlowInstance}
@@ -113,6 +138,7 @@ export const PipelineUI = () => {
                 proOptions={proOptions}
                 snapGrid={[gridSize, gridSize]}
                 connectionLineType='smoothstep'
+                deleteKeyCode={['Backspace', 'Delete']}
                 fitView
             >
                 <Background color="#d6d9e0" gap={gridSize} variant="dots" />
